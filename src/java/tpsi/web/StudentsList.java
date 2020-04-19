@@ -23,21 +23,24 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "StudentsList", urlPatterns = {"/StudentsList"})
 public class StudentsList extends HttpServlet {
 
-    int counter;
-    List<Student> Students = new ArrayList<>();
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("counter") == null) {
-            session.setAttribute("counter", 0);
-        } else {
-            counter++;
+        if (session.getAttribute("studentList") == null) {
+            session.setAttribute("studentList", new ArrayList<Student>());
         }
-        session.setAttribute("counter", counter);
 
+        if (session.getAttribute("counter") == null) {
+            session.setAttribute("counter", 1);
+        } else {
+            int counter = (int) session.getAttribute("counter");
+            counter++;
+            session.setAttribute("counter", counter);
+        }
+
+        List<Student> Students = (List<Student>) session.getAttribute("studentList");
         String firstName = request.getParameter("imie");
         String lastName = request.getParameter("nazwisko");
         String email = request.getParameter("email");
@@ -54,11 +57,13 @@ public class StudentsList extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("counter") == null) {
-            session.setAttribute("counter", 0);
-        } else {
-            counter++;
+
+        session.setAttribute("counter",1);
+
+        if (session.getAttribute("studentList") != null) {
+            session.setAttribute("studentList", new ArrayList<Student>());
         }
+
         request.getRequestDispatcher("students.jsp").forward(request, response);
     }
 }
