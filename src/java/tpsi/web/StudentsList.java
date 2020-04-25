@@ -28,10 +28,7 @@ public class StudentsList extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("studentList") == null) {
-            session.setAttribute("studentList", new ArrayList<Student>());
-        }
-
+        
         if (session.getAttribute("counter") == null) {
             session.setAttribute("counter", 1);
         } else {
@@ -39,8 +36,12 @@ public class StudentsList extends HttpServlet {
             counter++;
             session.setAttribute("counter", counter);
         }
-
-        List<Student> Students = (List<Student>) session.getAttribute("studentList");
+        
+        
+        ArrayList<Student> Students = (ArrayList<Student>) session.getAttribute("studentList");
+        if (Students == null) {
+            Students = new ArrayList<Student>();
+        }
         String firstName = request.getParameter("imie");
         String lastName = request.getParameter("nazwisko");
         String email = request.getParameter("email");
@@ -58,11 +59,17 @@ public class StudentsList extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        session.setAttribute("counter",1);
-
-        if (session.getAttribute("studentList") != null) {
-            session.setAttribute("studentList", new ArrayList<Student>());
+        if (session.getAttribute("counter") == null) {
+            session.setAttribute("counter", 1);
+        } else {
+            int counter = (int) session.getAttribute("counter");
+            counter++;
+            session.setAttribute("counter", counter);
         }
+
+       // if (session.getAttribute("studentList") == null) {
+       //    session.setAttribute("studentList", new ArrayList<Student>());
+       //}
 
         request.getRequestDispatcher("students.jsp").forward(request, response);
     }
